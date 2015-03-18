@@ -1,0 +1,10 @@
+fit_intercept:True:bool 
+normalize:True:bool
+n_alphas:25:int
+precompute:auto:string
+copy_X:True:bool 
+max_iter:5000:int
+tol:0.000001:float
+positive=False:bool
+n_jobs:50:int
+cut_off:0.00000001:float
