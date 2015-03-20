@@ -13,6 +13,9 @@ npfs_sele = 191;
 sels = 100:100:900;
 rf_time = 143.14;
 rf_sele = 300;
+lefse_time = 60*6+14.279;
+lefse_sele = 19;
+
 
 h = figure;
 hold on;
@@ -23,9 +26,12 @@ plot(sels, mim_data, 'k', 'LineWidth', 3)
 plot(lasso_sele, lasso_time, 'c*', 'LineWidth', 5)
 plot(npfs_sele, npfs_time, 'k*', 'LineWidth', 5)
 plot(rf_sele, rf_time, 'r*', 'LineWidth', 5)
+plot(lefse_sele, lefse_time, 'g*', 'LineWidth', 5)
 xlabel('Selected Features', 'FontSize', 22)
 ylabel('Time (seconds)', 'FontSize', 22)
-legend('JMI', 'mRMR', 'MIM', 'Lasso', 'NPFS-MIM', 'RFC', 'Location', 'best')
+% columnlegend(3, {'JMI', 'mRMR', 'MIM', 'Lasso', 'NPFS-MIM', 'RFC', 'LefSe'}, 'NorthWest');
+% legend('JMI', 'mRMR', 'MIM', 'Lasso', 'NPFS-MIM', 'RFC', 'LefSe', 'Location', 'best')
+legHdl = gridLegend(h, 2, {'JMI', 'mRMR', 'MIM', 'Lasso', 'NPFS-MIM', 'RFC', 'LefSe'});
 set(gca, 'fontsize', 22)
 saveas(h, 'eps/timings.eps', 'eps2c')
 %% rf weights
@@ -39,8 +45,7 @@ for i = 2:length(dat)
   w = strsplit(dat{i}, '\t');
   weights(i-1) = str2num(w{2});
 end
-%%
-close all
+
 w = weights(1:700);
 h = figure; 
 plot(log(abs(w)), 'LineWidth', 2);
@@ -79,14 +84,21 @@ vals = [-6.20923 ,5.14587  ,4.18384 ,-4.11038 ,-3.96605 ,-3.65923 ,3.34877 ,...
 h = figure; 
 hold on;
 box on;
-stem(find(vals < 0), abs(vals(vals < 0)), 'LineWidth', 2)
-stem(find(vals >= 0), abs(vals(vals >= 0)), 'r', 'LineWidth', 2)
-ylabel('Difference in Relative Abundance', 'FontSize', 22)
-text(3,0.006,'Higher Abundance in Vegetarians', 'Color', 'red', 'FontSize', 22)
-text(3,0.0055,'Higher Abundance in Omnivores', 'Color', 'blue', 'FontSize', 22)
+stem(find(vals < 0), 100*abs(vals(vals < 0)), 'LineWidth', 2)
+stem(find(vals >= 0), 100*abs(vals(vals >= 0)), 'r', 'LineWidth', 2)
+ylabel('Difference in Relative Abundance (%)', 'FontSize', 22)
+text(3,0.6,'Higher Abundance in Vegetarians', 'Color', 'red', 'FontSize', 22)
+text(3,0.55,'Higher Abundance in Omnivores', 'Color', 'blue', 'FontSize', 22)
+%text(3,0.006,'Higher Abundance in Vegetarians', 'Color', 'red', 'FontSize', 22)
+%text(3,0.0055,'Higher Abundance in Omnivores', 'Color', 'blue', 'FontSize', 22)
 set(gca, 'fontsize', 20)
 % ax = gca;
 % ax.XTick = [0:length(vals)];
+% ax.xTickNumber = 15;
+% set(gca,'XTickLabel',{'1','2','3','4','5','7','8','9','10','11','12','13','14','15'})
+
+set(gca, 'XTick', 1:15)
+
 saveas(h, 'eps/differences.eps', 'eps2c')
 
 for i = 1:length(feats)
@@ -103,8 +115,8 @@ for i = 2:length(dat)
   w = strsplit(dat{i}, '\t');
   weights(i-1) = str2num(w{2});
 end
-%%
-w = weights;%(1:700);
+
+w = weights(1:1700);
 h = figure; 
 plot(log(abs(w)), 'LineWidth', 2);
 ylabel('log(Decrease in Accuracy)', 'FontSize', 22);
